@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #F9FAFB;
+}
+
+
+/* FULLCALENDAR */
+
+.fc-toolbar-title {
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  color: #111827;
+}
+
+.fc-button {
+  background-color: #C8A96B !important;
+  border: none !important;
+}
+
+.fc-button:hover {
+  background-color: #b89355 !important;
+}
+
+.fc-daygrid-event {
+  border-radius: 6px;
+  padding: 2px;
+}
