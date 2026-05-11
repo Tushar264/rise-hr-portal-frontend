@@ -34,7 +34,7 @@ export default function Navbar() {
             <img
               src='/rise-logo.png'
               alt='RISE'
-              className='w-12 h-12 rounded object-cover'
+              className='w-12 h-12 md:w-12 md:h-12 object-contain bg-white rounded p-1'
             />
 
             <h1 className='text-2xl font-bold'>
