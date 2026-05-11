@@ -3,8 +3,6 @@ import {
   useNavigate,
 } from 'react-router-dom'
 
-import logo from '../assets/logo.png'
-
 export default function Navbar() {
 
   const navigate = useNavigate()
@@ -14,7 +12,6 @@ export default function Navbar() {
       localStorage.getItem('user')
     )
 
-
   const logout = () => {
 
     localStorage.clear()
@@ -22,61 +19,86 @@ export default function Navbar() {
     navigate('/login')
   }
 
-
   return (
 
-    <div className='bg-gray-400 text-black px-6 py-4 flex justify-between items-center shadow-md border-b'>
+    <nav className='bg-black text-white'>
 
-      <div className='flex items-center gap-3'>
+      <div className='max-w-7xl mx-auto px-4 py-3'>
 
-        <img
-          src={logo}
-          alt='RISE Logo'
-          className='h-10 w-auto'
-        />
+        <div className='flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
 
-        <h1 className='text-2xl font-bold'>
-          RISE HR Portal
-        </h1>
+          {/* LOGO + TITLE */}
+
+          <div className='flex items-center gap-3'>
+
+            <img
+              src='/rise-logo.png'
+              alt='RISE'
+              className='w-12 h-12 rounded object-cover'
+            />
+
+            <h1 className='text-2xl font-bold'>
+              RISE HR Portal
+            </h1>
+
+          </div>
+
+
+          {/* NAV LINKS */}
+
+          <div className='flex flex-wrap items-center gap-4 text-sm md:text-base'>
+
+            <Link
+              to='/'
+              className='hover:text-yellow-400'
+            >
+              Dashboard
+            </Link>
+
+
+            <Link
+              to='/announcements'
+              className='hover:text-yellow-400'
+            >
+              Announcements
+            </Link>
+
+
+            {
+              user?.role === 'ADMIN' && (
+                <>
+                  <Link
+                    to='/admin'
+                    className='hover:text-yellow-400'
+                  >
+                    Admin
+                  </Link>
+
+
+                  <Link
+                    to='/audit-logs'
+                    className='hover:text-yellow-400'
+                  >
+                    Audit Logs
+                  </Link>
+                </>
+              )
+            }
+
+
+            <button
+              onClick={logout}
+              className='bg-red-500 hover:bg-red-600 px-4 py-2 rounded'
+            >
+              Logout
+            </button>
+
+          </div>
+
+        </div>
 
       </div>
 
-
-      <div className='flex gap-6 items-center'>
-
-        <Link to='/'>
-          Dashboard
-        </Link>
-
-        <Link to='/announcements'>
-          Announcements
-        </Link>
-
-
-        {
-          user?.role === 'ADMIN' && (
-            <>
-              <Link to='/admin'>
-                Admin
-              </Link>
-
-              <Link to='/audit-logs'>
-                Audit Logs
-              </Link>
-            </>
-          )
-        }
-
-
-        <button
-          onClick={logout}
-          className='bg-black text-white px-4 py-1 rounded'
-        >
-          Logout
-        </button>
-
-      </div>
-
-    </div>
+    </nav>
   )
 }
