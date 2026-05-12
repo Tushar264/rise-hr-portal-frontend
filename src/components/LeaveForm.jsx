@@ -71,8 +71,8 @@ export default function LeaveForm() {
         className='w-full border p-2 rounded'
       >
 
-        <option value='PTO'>
-          PTO
+        <option value='FULL_DAY'>
+          FULL_DAY
         </option>
 
         <option value='HALF_DAY'>
