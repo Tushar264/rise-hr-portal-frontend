@@ -1,75 +1,101 @@
-import { useState } from 'react'
+import { GoogleLogin }
+  from '@react-oauth/google'
 
 import api from '../services/api'
 
-import { useNavigate } from 'react-router-dom'
+import { useNavigate }
+  from 'react-router-dom'
+
+import logo
+  from '../assets/rise-logo.png'
 
 export default function Login() {
 
-  const navigate = useNavigate()
+  const navigate =
+    useNavigate()
 
-  const [email, setEmail] =
-    useState('')
 
-  const handleLogin = async (e) => {
+  const handleSuccess =
+    async (credentialResponse) => {
 
-    e.preventDefault()
+      try {
 
-    try {
+        const res =
+          await api.post(
 
-      const res =
-        await api.post(
-          '/auth/login',
-          { email }
+            '/auth/google',
+
+            {
+              token:
+                credentialResponse.credential,
+            }
+          )
+
+
+        localStorage.setItem(
+
+          'token',
+
+          res.data.token
         )
 
-      localStorage.setItem(
-        'token',
-        res.data.token
-      )
 
-      localStorage.setItem(
-        'user',
-        JSON.stringify(res.data.user)
-      )
+        localStorage.setItem(
 
-      navigate('/')
+          'user',
 
-    } catch (error) {
+          JSON.stringify(
+            res.data.user
+          )
+        )
 
-      alert('Login failed')
-    }
+
+        navigate('/')
+
+      } catch (error) {
+
+        alert(
+          'Access denied'
+        )
+      }
   }
+
+
 
   return (
 
-    <div className='min-h-screen flex items-center justify-center bg-gray-100'>
+    <div className='min-h-screen flex items-center justify-center bg-[var(--rise-light)]'>
 
-      <form
-        onSubmit={handleLogin}
-        className='bg-white p-6 rounded shadow w-96'
-      >
+      <div className='bg-white p-8 rounded-xl shadow-md w-[400px]'>
 
-        <h1 className='text-2xl font-bold mb-4'>
-          Login
-        </h1>
-
-        <input
-          type='email'
-          placeholder='Enter email'
-          className='w-full border p-2 rounded mb-4'
-          onChange={(e) =>
-            setEmail(e.target.value)
-          }
+        <img
+          src={logo}
+          alt='RISE'
+          className='h-20 mx-auto mb-6'
         />
 
-        <button
-          className='w-full bg-black text-white py-2 rounded'
-        >
-          Login
-        </button>
+        <h1 className='text-3xl font-bold mb-6 text-center'>
 
-      </form>
+          RISE HR Portal
+
+        </h1>
+
+
+        <div className='flex justify-center'>
+
+          <GoogleLogin
+            onSuccess={handleSuccess}
+
+            onError={() =>
+              console.log(
+                'Login Failed'
+              )
+            }
+          />
+
+        </div>
+
+      </div>
 
     </div>
   )
