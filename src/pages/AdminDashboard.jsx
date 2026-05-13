@@ -7,13 +7,16 @@ import {
   useNavigate,
 } from 'react-router-dom'
 
-import api from '../services/api'
+import Navbar
+  from '../components/Navbar'
 
-import Navbar from '../components/Navbar'
+import api
+  from '../services/api'
 
 export default function AdminDashboard() {
 
-  const navigate = useNavigate()
+  const navigate =
+    useNavigate()
 
   const [leaves, setLeaves] =
     useState([])
@@ -21,28 +24,16 @@ export default function AdminDashboard() {
 
   useEffect(() => {
 
-    const token =
-      localStorage.getItem('token')
-
     const user =
       JSON.parse(
         localStorage.getItem('user')
       )
 
-    // NOT LOGGED IN
-    if (!token) {
-
-      navigate('/login')
-
-      return
-    }
-
-    // NOT ADMIN
-    if (user?.role !== 'ADMIN') {
+    if (
+      user?.role !== 'ADMIN'
+    ) {
 
       navigate('/')
-
-      return
     }
 
     fetchPendingLeaves()
@@ -102,15 +93,11 @@ export default function AdminDashboard() {
           }
         )
 
-        alert('Leave Approved')
-
         fetchPendingLeaves()
 
       } catch (error) {
 
         console.log(error)
-
-        alert('Approval failed')
       }
   }
 
@@ -145,15 +132,11 @@ export default function AdminDashboard() {
           }
         )
 
-        alert('Leave Rejected')
-
         fetchPendingLeaves()
 
       } catch (error) {
 
         console.log(error)
-
-        alert('Rejection failed')
       }
   }
 
@@ -164,157 +147,116 @@ export default function AdminDashboard() {
     <>
       <Navbar />
 
-      <div className='min-h-screen bg-gray-100 p-6'>
+      <div className='min-h-screen bg-[var(--rise-cream)] p-6'>
 
         <h1 className='text-3xl font-bold mb-6'>
+
           Admin Dashboard
+
         </h1>
 
 
+        <div className='space-y-4'>
 
-        {
-          leaves.length === 0 ? (
+          {
+            leaves.map((leave) => (
 
-            <div className='bg-white p-6 rounded shadow text-center'>
+              <div
+                key={leave._id}
+                className='bg-white p-6 rounded-xl shadow-md'
+              >
 
-              <p className='text-gray-600'>
-                No pending leave requests
-              </p>
+                <h2 className='text-xl font-semibold mb-2'>
 
-            </div>
+                  {
+                    leave.userEmail
+                  }
 
-          ) : (
+                </h2>
 
-            <div className='space-y-4'>
+                <p>
+                  <strong>
+                    Type:
+                  </strong>
+                  {' '}
+                  {leave.leaveType}
+                </p>
 
-              {
-                leaves.map((leave) => (
+                <p>
+                  <strong>
+                    From:
+                  </strong>
+                  {' '}
+                  {
+                    new Date(
+                      leave.startDate
+                    ).toLocaleDateString()
+                  }
+                </p>
 
-                  <div
-                    key={leave._id}
-                    className='bg-white p-5 rounded shadow'
+                <p>
+                  <strong>
+                    To:
+                  </strong>
+                  {' '}
+                  {
+                    new Date(
+                      leave.endDate
+                    ).toLocaleDateString()
+                  }
+                </p>
+
+                <p>
+                  <strong>
+                    Reason:
+                  </strong>
+                  {' '}
+                  {leave.reason}
+                </p>
+
+                <p>
+                  <strong>
+                    Deducted Days:
+                  </strong>
+                  {' '}
+                  {
+                    leave.deductedDays
+                  }
+                </p>
+
+
+                <div className='flex gap-4 mt-4'>
+
+                  <button
+                    onClick={() =>
+                      approveLeave(
+                        leave._id
+                      )
+                    }
+                    className='bg-[var(--rise-primary)] text-white px-4 py-2 rounded-lg hover:opacity-90 transition'
                   >
-
-                    <h2 className='text-2xl font-semibold mb-2'>
-
-                      {leave.userId?.name}
-
-                    </h2>
+                    Approve
+                  </button>
 
 
-                    <div className='space-y-1 text-gray-700'>
+                  <button
+                    onClick={() =>
+                      rejectLeave(
+                        leave._id
+                      )
+                    }
+                    className='bg-[var(--rise-black)] text-white px-4 py-2 rounded-lg hover:opacity-90 transition'
+                  >
+                    Reject
+                  </button>
 
-                      <p>
+                </div>
 
-                        <strong>
-                          Leave Type:
-                        </strong>
+              </div>
+            ))
+          }
 
-                        {' '}
-
-                        {leave.leaveType}
-
-                      </p>
-
-
-                      <p>
-
-                        <strong>
-                          Start Date:
-                        </strong>
-
-                        {' '}
-
-                        {
-                          new Date(
-                            leave.startDate
-                          ).toLocaleDateString()
-                        }
-
-                      </p>
-
-
-                      <p>
-
-                        <strong>
-                          End Date:
-                        </strong>
-
-                        {' '}
-
-                        {
-                          new Date(
-                            leave.endDate
-                          ).toLocaleDateString()
-                        }
-
-                      </p>
-
-
-                      <p>
-
-                        <strong>
-                          Reason:
-                        </strong>
-
-                        {' '}
-
-                        {leave.reason}
-
-                      </p>
-
-
-                      <p>
-
-                        <strong>
-                          Deducted Days:
-                        </strong>
-
-                        {' '}
-
-                        {leave.deductedDays}
-
-                      </p>
-
-                    </div>
-
-
-
-                    <div className='flex gap-4 mt-5'>
-
-                      <button
-                        onClick={() =>
-                          approveLeave(
-                            leave._id
-                          )
-                        }
-                        className='bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded'
-                      >
-                        Approve
-                      </button>
-
-
-
-                      <button
-                        onClick={() =>
-                          rejectLeave(
-                            leave._id
-                          )
-                        }
-                        className='bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded'
-                      >
-                        Reject
-                      </button>
-
-                    </div>
-
-                  </div>
-                ))
-              }
-
-            </div>
-          )
-        }
+        </div>
 
       </div>
     </>

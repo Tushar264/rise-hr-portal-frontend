@@ -34,7 +34,7 @@ export default function LeaveForm() {
 
       const response = await api.post(
         '/leave',
-        form,
+        formData,
         {
           headers: {
             Authorization:

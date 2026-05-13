@@ -54,6 +54,8 @@ export default function Login() {
 
       } catch (error) {
 
+        console.log(error)
+
         alert(
           'Access denied'
         )
@@ -84,7 +86,10 @@ export default function Login() {
         <div className='flex justify-center'>
 
           <GoogleLogin
-            onSuccess={handleSuccess}
+
+            onSuccess={
+              handleSuccess
+            }
 
             onError={() =>
               console.log(
