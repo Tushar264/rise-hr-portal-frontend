@@ -3,12 +3,25 @@ import {
   useNavigate,
 } from 'react-router-dom'
 
+import {
+  useState,
+} from 'react'
+
+import {
+  Menu,
+  X,
+} from 'lucide-react'
+
 import logo
   from '../assets/rise-logo.png'
 
 export default function Navbar() {
 
-  const navigate = useNavigate()
+  const navigate =
+    useNavigate()
+
+  const [open, setOpen] =
+    useState(false)
 
   const user =
     JSON.parse(
@@ -26,60 +39,154 @@ export default function Navbar() {
 
   return (
 
-    <div className='bg-[var(--rise-primary)] text-[var(--rise-white)] px-6 py-4 flex justify-between items-center shadow-md'>
+    <nav className='bg-[var(--rise-primary)] text-white shadow-md'>
 
-      <div className='flex items-center gap-3'>
+      <div className='max-w-7xl mx-auto px-4 py-3'>
 
-        <img
-          src={logo}
-          alt='RISE'
-          className='h-10'
-        />
+        <div className='flex items-center justify-between'>
 
-        <h1 className='text-2xl font-bold tracking-wide'>
+          {/* LOGO */}
+          <div className='flex items-center gap-3'>
 
-          RISE HR Portal
+            <img
+              src={logo}
+              alt='RISE'
+              className='h-10 w-auto bg-white p-1 rounded'
+            />
 
-        </h1>
+            <h1 className='text-2xl font-bold hidden sm:block'>
 
-      </div>
+              RISE HR Portal
 
+            </h1>
 
-      <div className='flex gap-6 items-center'>
-
-        <Link to='/'>
-          Dashboard
-        </Link>
-
-        <Link to='/announcements'>
-          Announcements
-        </Link>
+          </div>
 
 
+          {/* DESKTOP MENU */}
+          <div className='hidden md:flex items-center gap-6'>
+
+            <Link to='/'>
+              Dashboard
+            </Link>
+
+            <Link to='/announcements'>
+              Announcements
+            </Link>
+
+
+            {
+              user?.role === 'ADMIN' && (
+                <>
+                  <Link to='/admin'>
+                    Admin
+                  </Link>
+
+                  <Link to='/audit-logs'>
+                    Audit Logs
+                  </Link>
+                </>
+              )
+            }
+
+
+            <button
+              onClick={logout}
+              className='bg-black px-4 py-2 rounded-lg hover:opacity-90 transition'
+            >
+              Logout
+            </button>
+
+          </div>
+
+
+          {/* MOBILE MENU BUTTON */}
+          <button
+
+            className='md:hidden'
+
+            onClick={() =>
+              setOpen(!open)
+            }
+          >
+
+            {
+              open
+                ? <X size={28} />
+                : <Menu size={28} />
+            }
+
+          </button>
+
+        </div>
+
+
+        {/* MOBILE MENU */}
         {
-          user?.role === 'ADMIN' && (
-            <>
-              <Link to='/admin'>
-                Admin
+          open && (
+
+            <div className='md:hidden flex flex-col gap-4 mt-4 pb-4'>
+
+              <Link
+                to='/'
+                onClick={() =>
+                  setOpen(false)
+                }
+              >
+                Dashboard
               </Link>
 
-              <Link to='/audit-logs'>
-                Audit Logs
+
+              <Link
+                to='/announcements'
+                onClick={() =>
+                  setOpen(false)
+                }
+              >
+                Announcements
               </Link>
-            </>
+
+
+              {
+                user?.role ===
+                  'ADMIN' && (
+
+                  <>
+                    <Link
+                      to='/admin'
+                      onClick={() =>
+                        setOpen(false)
+                      }
+                    >
+                      Admin
+                    </Link>
+
+                    <Link
+                      to='/audit-logs'
+                      onClick={() =>
+                        setOpen(false)
+                      }
+                    >
+                      Audit Logs
+                    </Link>
+                  </>
+                )
+              }
+
+
+              <button
+                onClick={logout}
+                className='bg-black px-4 py-2 rounded-lg w-fit'
+              >
+                Logout
+              </button>
+
+            </div>
           )
         }
 
-
-        <button
-          onClick={logout}
-          className='bg-[var(--rise-black)] text-[var(--rise-white)] px-4 py-2 rounded-lg hover:opacity-90 transition'
-        >
-          Logout
-        </button>
-
       </div>
 
-    </div>
+    </nav>
   )
 }
